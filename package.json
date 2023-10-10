@@ -29,6 +29,7 @@
 	},
 	"type": "module",
 	"dependencies": {
-		"ai": "^2.2.14"
+		"ai": "^2.2.14",
+		"langchain": "^0.0.163"
 	}
 }
