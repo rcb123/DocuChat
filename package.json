@@ -35,8 +35,10 @@
 	},
 	"type": "module",
 	"dependencies": {
+		"@supabase/supabase-js": "^2.38.0",
 		"ai": "^2.2.14",
 		"langchain": "^0.0.163",
-		"lucide-svelte": "^0.284.0"
+		"lucide-svelte": "^0.284.0",
+		"zod": "^3.22.4"
 	}
 }
