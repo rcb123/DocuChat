@@ -9,6 +9,7 @@ import { SerpAPI } from 'langchain/tools';
 
 import { AIMessage, ChatMessage, HumanMessage } from 'langchain/schema';
 import { BufferMemory, ChatMessageHistory } from 'langchain/memory';
+import { OPENAI_API_KEY } from '$env/static/private';
 
 export const config = {
 	runtime: 'edge'
@@ -48,7 +49,7 @@ export const POST: RequestHandler = async ({ request }) => {
 
 		// Requires process.env.SERPAPI_API_KEY to be set: https://serpapi.com/
 		const tools = [new Calculator(), new SerpAPI()];
-		const chat = new ChatOpenAI({ modelName: 'gpt-4', temperature: 0 });
+		const chat = new ChatOpenAI({ modelName: 'gpt-4', temperature: 0, openAIApiKey: OPENAI_API_KEY });
 
 		/**
 		 * The default prompt for the OpenAI functions agent has a placeholder

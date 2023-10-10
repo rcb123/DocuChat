@@ -4,6 +4,7 @@ import type { RequestHandler } from '@sveltejs/kit';
 import { BytesOutputParser } from 'langchain/schema/output_parser';
 import { RunnableSequence } from 'langchain/schema/runnable';
 import { ChatOpenAI } from 'langchain/chat_models/openai';
+import { OPENAI_API_KEY } from '$env/static/private';
 import { PromptTemplate } from 'langchain/prompts';
 import { StreamingTextResponse } from 'ai';
 
@@ -38,6 +39,7 @@ export const POST: RequestHandler = async ({ request }) => {
 		const prompt = PromptTemplate.fromTemplate(TEMPLATE);
 
 		const model = new ChatOpenAI({
+			openAIApiKey: OPENAI_API_KEY,
 			temperature: 0.8
 		});
 

@@ -3,14 +3,15 @@ import type { RequestHandler } from '@sveltejs/kit';
 
 import { createClient } from '@supabase/supabase-js';
 
+import { createRetrieverTool, OpenAIAgentTokenBufferMemory } from 'langchain/agents/toolkits';
 import { AIMessage, ChatMessage, HumanMessage } from 'langchain/schema';
 import { SupabaseVectorStore } from 'langchain/vectorstores/supabase';
+import { initializeAgentExecutorWithOptions } from 'langchain/agents';
 import { OpenAIEmbeddings } from 'langchain/embeddings/openai';
 import { ChatOpenAI } from 'langchain/chat_models/openai';
-import { StreamingTextResponse } from 'ai';
-import { createRetrieverTool, OpenAIAgentTokenBufferMemory } from 'langchain/agents/toolkits';
 import { ChatMessageHistory } from 'langchain/memory';
-import { initializeAgentExecutorWithOptions } from 'langchain/agents';
+import { OPENAI_API_KEY } from '$env/static/private';
+import { StreamingTextResponse } from 'ai';
 
 export const config = {
 	runtime: 'edge'
@@ -51,7 +52,8 @@ export const POST: RequestHandler = async ({ request }) => {
 		const currentMessageContent = messages[messages.length - 1].content;
 
 		const model = new ChatOpenAI({
-			modelName: 'gpt-4'
+			openAIApiKey: OPENAI_API_KEY,
+			modelName: 'gpt-3.5-turbo' // Change to gpt-4 when possible
 		});
 
 		const client = createClient(process.env.SUPABASE_URL!, process.env.SUPABASE_PRIVATE_KEY!);

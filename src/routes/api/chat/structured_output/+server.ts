@@ -1,11 +1,11 @@
 import type { RequestHandler } from '@sveltejs/kit';
 
-import { z } from 'zod';
-import { zodToJsonSchema } from 'zod-to-json-schema';
-
-import { ChatOpenAI } from 'langchain/chat_models/openai';
-import { PromptTemplate } from 'langchain/prompts';
 import { JsonOutputFunctionsParser } from 'langchain/output_parsers';
+import { ChatOpenAI } from 'langchain/chat_models/openai';
+import { zodToJsonSchema } from 'zod-to-json-schema';
+import { OPENAI_API_KEY } from '$env/static/private';
+import { PromptTemplate } from 'langchain/prompts';
+import { z } from 'zod';
 
 export const config = {
 	runtime: 'edge'
@@ -36,8 +36,9 @@ export const POST: RequestHandler = async ({ request }) => {
 		 * Function calling is currently only supported with ChatOpenAI models
 		 */
 		const model = new ChatOpenAI({
+			openAIApiKey: OPENAI_API_KEY,
 			temperature: 0.8,
-			modelName: 'gpt-4'
+			modelName: 'gpt-3.5-turbo' // Change to gpt-4 when possible
 		});
 
 		/**

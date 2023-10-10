@@ -7,6 +7,7 @@ import { BytesOutputParser, StringOutputParser } from 'langchain/schema/output_p
 import { SupabaseVectorStore } from 'langchain/vectorstores/supabase';
 import { OpenAIEmbeddings } from 'langchain/embeddings/openai';
 import { ChatOpenAI } from 'langchain/chat_models/openai';
+import { OPENAI_API_KEY } from '$env/static/private';
 import { PromptTemplate } from 'langchain/prompts';
 import { StreamingTextResponse } from 'ai';
 
@@ -74,6 +75,7 @@ export const POST: RequestHandler = async ({ request }) => {
 		const currentMessageContent = messages[messages.length - 1].content;
 
 		const model = new ChatOpenAI({
+			openAIApiKey: OPENAI_API_KEY,
 			modelName: 'gpt-3.5-turbo',
 			temperature: 0.2
 		});
