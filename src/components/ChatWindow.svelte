@@ -37,7 +37,7 @@
 		if (!$messages.length) {
 			await new Promise((resolve) => setTimeout(resolve, 300));
 		}
-		if (chatEndpointIsLoading ?? intermediateStepsLoading) {
+		if ($chatEndpointIsLoading ?? intermediateStepsLoading) {
 			return;
 		}
 		if (!showIntermediateSteps) {
@@ -168,7 +168,7 @@
 				<div
 					role="status"
 					class={`${
-						chatEndpointIsLoading || intermediateStepsLoading ? '' : 'hidden'
+						$chatEndpointIsLoading || intermediateStepsLoading ? '' : 'hidden'
 					} flex justify-center`}
 				>
 					<svg
@@ -189,7 +189,7 @@
 					</svg>
 					<span class="sr-only">Loading...</span>
 				</div>
-				<span class={chatEndpointIsLoading || intermediateStepsLoading ? 'hidden' : ''}>Send</span>
+				<span class={$chatEndpointIsLoading || intermediateStepsLoading ? 'hidden' : ''}>Send</span>
 			</button>
 		</div>
 	</form>
