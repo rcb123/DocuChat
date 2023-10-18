@@ -1,5 +1,6 @@
 import type { RequestHandler } from '@sveltejs/kit';
 
+import { SUPABASE_URL, SUPABASE_PRIVATE_KEY, OPENAI_API_KEY } from '$env/static/private';
 import { RecursiveCharacterTextSplitter } from 'langchain/text_splitter';
 import { SupabaseVectorStore } from 'langchain/vectorstores/supabase';
 import { OpenAIEmbeddings } from 'langchain/embeddings/openai';
@@ -25,10 +26,7 @@ export const POST: RequestHandler = async ({ request }) => {
 	const { text } = JSON.parse(body);
 
 	try {
-		const client = createClient(
-			import.meta.env.VITE_SUPABASE_URL,
-			import.meta.env.VITE_SUPABASE_PRIVATE_KEY
-		);
+		const client = createClient(SUPABASE_URL, SUPABASE_PRIVATE_KEY);
 
 		const splitter = RecursiveCharacterTextSplitter.fromLanguage('markdown', {
 			chunkSize: 256,
@@ -37,11 +35,15 @@ export const POST: RequestHandler = async ({ request }) => {
 
 		const splitDocuments = await splitter.createDocuments([text]);
 
-		await SupabaseVectorStore.fromDocuments(splitDocuments, new OpenAIEmbeddings(), {
-			client,
-			tableName: 'documents',
-			queryName: 'match_documents'
-		});
+		await SupabaseVectorStore.fromDocuments(
+			splitDocuments,
+			new OpenAIEmbeddings({ openAIApiKey: OPENAI_API_KEY }),
+			{
+				client,
+				tableName: 'documents',
+				queryName: 'match_documents'
+			}
+		);
 
 		return new Response(JSON.stringify({ ok: true }), {
 			status: 200,

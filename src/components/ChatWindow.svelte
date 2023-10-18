@@ -26,8 +26,8 @@
 
 	let messageContainer: HTMLDivElement;
 
-	let showIntermediateSteps = false;
-	let intermediateStepsLoading = false;
+	let showIntermediateSteps: boolean = false;
+	let intermediateStepsLoading: boolean = false;
 	let sourcesForMessages: Record<string, any> = {};
 
 	async function sendMessage(e: SubmitEvent) {
@@ -45,7 +45,6 @@
 			// Some extra work to show intermediate steps properly
 		} else {
 			intermediateStepsLoading = true;
-			$input = '';
 			const messagesWithUserReply = $messages.concat({
 				id: $messages.length.toString(),
 				content: $input,
@@ -87,6 +86,7 @@
 						role: 'assistant'
 					}
 				];
+				$input = '';
 			} else {
 				if (json.error) {
 					toastError(json.error);

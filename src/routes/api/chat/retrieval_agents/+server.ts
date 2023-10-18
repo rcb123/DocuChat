@@ -4,6 +4,7 @@ import type { RequestHandler } from '@sveltejs/kit';
 import { createClient } from '@supabase/supabase-js';
 
 import { createRetrieverTool, OpenAIAgentTokenBufferMemory } from 'langchain/agents/toolkits';
+import { SUPABASE_URL, SUPABASE_PRIVATE_KEY } from '$env/static/private';
 import { AIMessage, ChatMessage, HumanMessage } from 'langchain/schema';
 import { SupabaseVectorStore } from 'langchain/vectorstores/supabase';
 import { initializeAgentExecutorWithOptions } from 'langchain/agents';
@@ -56,12 +57,15 @@ export const POST: RequestHandler = async ({ request }) => {
 			modelName: 'gpt-3.5-turbo' // Change to gpt-4 when possible
 		});
 
-		const client = createClient(process.env.SUPABASE_URL!, process.env.SUPABASE_PRIVATE_KEY!);
-		const vectorstore = new SupabaseVectorStore(new OpenAIEmbeddings(), {
-			client,
-			tableName: 'documents',
-			queryName: 'match_documents'
-		});
+		const client = createClient(SUPABASE_URL!, SUPABASE_PRIVATE_KEY!);
+		const vectorstore = new SupabaseVectorStore(
+			new OpenAIEmbeddings({ openAIApiKey: OPENAI_API_KEY }),
+			{
+				client,
+				tableName: 'documents',
+				queryName: 'match_documents'
+			}
+		);
 
 		const chatHistory = new ChatMessageHistory(
 			previousMessages.map(convertVercelMessageToLangChainMessage)

@@ -8,8 +8,8 @@ import { StreamingTextResponse } from 'ai';
 import { SerpAPI } from 'langchain/tools';
 
 import { AIMessage, ChatMessage, HumanMessage } from 'langchain/schema';
+import { OPENAI_API_KEY, SERPAPI_API_KEY } from '$env/static/private';
 import { BufferMemory, ChatMessageHistory } from 'langchain/memory';
-import { OPENAI_API_KEY } from '$env/static/private';
 
 export const config = {
 	runtime: 'edge'
@@ -48,8 +48,12 @@ export const POST: RequestHandler = async ({ request }) => {
 		const currentMessageContent = messages[messages.length - 1].content;
 
 		// Requires process.env.SERPAPI_API_KEY to be set: https://serpapi.com/
-		const tools = [new Calculator(), new SerpAPI()];
-		const chat = new ChatOpenAI({ modelName: 'gpt-4', temperature: 0, openAIApiKey: OPENAI_API_KEY });
+		const tools = [new Calculator(), new SerpAPI(SERPAPI_API_KEY)];
+		const chat = new ChatOpenAI({
+			modelName: 'gpt-3.5-turbo',
+			temperature: 0,
+			openAIApiKey: OPENAI_API_KEY
+		});
 
 		/**
 		 * The default prompt for the OpenAI functions agent has a placeholder

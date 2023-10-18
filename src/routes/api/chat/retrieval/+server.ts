@@ -2,10 +2,11 @@ import type { Message as VercelChatMessage } from 'ai';
 import type { RequestHandler } from '@sveltejs/kit';
 import type { Document } from 'langchain/document';
 
-import { RunnableSequence } from 'langchain/schema/runnable';
 import { BytesOutputParser, StringOutputParser } from 'langchain/schema/output_parser';
+import { SUPABASE_URL, SUPABASE_PRIVATE_KEY } from '$env/static/private';
 import { SupabaseVectorStore } from 'langchain/vectorstores/supabase';
 import { OpenAIEmbeddings } from 'langchain/embeddings/openai';
+import { RunnableSequence } from 'langchain/schema/runnable';
 import { ChatOpenAI } from 'langchain/chat_models/openai';
 import { OPENAI_API_KEY } from '$env/static/private';
 import { PromptTemplate } from 'langchain/prompts';
@@ -80,12 +81,15 @@ export const POST: RequestHandler = async ({ request }) => {
 			temperature: 0.2
 		});
 
-		const client = createClient(process.env.SUPABASE_URL!, process.env.SUPABASE_PRIVATE_KEY!);
-		const vectorstore = new SupabaseVectorStore(new OpenAIEmbeddings(), {
-			client,
-			tableName: 'documents',
-			queryName: 'match_documents'
-		});
+		const client = createClient(SUPABASE_URL!, SUPABASE_PRIVATE_KEY!);
+		const vectorstore = new SupabaseVectorStore(
+			new OpenAIEmbeddings({ openAIApiKey: OPENAI_API_KEY }),
+			{
+				client,
+				tableName: 'documents',
+				queryName: 'match_documents'
+			}
+		);
 
 		/**
 		 * We use LangChain Expression Language to compose two chains.
